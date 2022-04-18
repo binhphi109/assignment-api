@@ -99,6 +99,100 @@ class AccountService {
     };
   }
 
+  async getAllAccounts(filter?: AccountFilter): Promise<Account[]> {
+    const query = AccountModel.find(
+      {
+        deleted: false,
+      },
+      "-password"
+    );
+
+    if (filter?.name != null) {
+      query.where("name", { $regex: filter.name });
+    }
+
+    return query.lean().exec();
+  }
+
+  async getAccount(accountId: string): Promise<Account | null> {
+    const account = await AccountModel.findOne(
+      {
+        _id: accountId,
+        deleted: false,
+      },
+      "-password"
+    )
+      .lean()
+      .exec();
+
+    return account;
+  }
+
+  async updateAccount(account: Account): Promise<Account> {
+    this.validate(account);
+
+    const foundAccount = await AccountModel.findOne({
+      _id: account._id,
+    })
+      .lean()
+      .exec();
+
+    if (foundAccount == null) {
+      throw new NotFoundError(`Account ${account.username} not existed`);
+    }
+
+    const hashedPassword = await bcrypt.hash(account.password, 16);
+
+    const updatedAccount = await AccountModel.findOneAndUpdate(
+      {
+        _id: account._id,
+      },
+      {
+        ...foundAccount,
+        ...account,
+        password: hashedPassword,
+        editDate: new Date(),
+      },
+      { new: true }
+    )
+      .lean()
+      .exec();
+
+    if (updatedAccount == null) {
+      throw new NotFoundError(`Updated Account ${account._id} not existed`);
+    }
+
+    // remove password data
+    updatedAccount!.password = "";
+
+    return updatedAccount;
+  }
+
+  async deleteAccount(accountId: string): Promise<boolean> {
+    const account = await AccountModel.findOne({
+      _id: accountId,
+    })
+      .lean()
+      .exec();
+
+    if (account == null) {
+      throw new NotFoundError(`Account ${accountId} not existed`);
+    }
+
+    await AccountModel.findOneAndUpdate(
+      {
+        _id: account._id,
+      },
+      {
+        deleted: true,
+        editDate: new Date(),
+      }
+    )
+      .lean()
+      .exec();
+
+    return true;
+  }
 }
 
 export default new AccountService();
