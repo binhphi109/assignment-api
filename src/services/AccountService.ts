@@ -66,6 +66,7 @@ class AccountService {
     const account = await AccountModel.findOne({
       username: username.toLowerCase(),
     })
+      .populate("role")
       .lean()
       .exec();
 
@@ -86,6 +87,7 @@ class AccountService {
       {
         _id: account._id,
         username: account.username,
+        role: account.role,
       },
       config.tokenSignKey,
       {
@@ -111,7 +113,7 @@ class AccountService {
       query.where("name", { $regex: filter.name });
     }
 
-    return query.lean().exec();
+    return query.populate("role").lean().exec();
   }
 
   async getAccount(accountId: string): Promise<Account | null> {

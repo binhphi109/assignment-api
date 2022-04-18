@@ -1,5 +1,6 @@
 import mongoose, { Document, model } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Role } from "./Role";
 
 @Schema({
   toJSON: { virtuals: true },
@@ -20,6 +21,10 @@ export class Account {
   @Prop({ required: true })
   password!: string;
 
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Role" })
+  roleId?: string;
+  role?: Role;
+
   @Prop({ required: true, default: false })
   deleted?: boolean;
 
@@ -32,5 +37,7 @@ export class Account {
 
 export type AccountDocument = Account & Document;
 export const AccountSchema = SchemaFactory.createForClass(Account);
+
+AccountSchema.virtual("role", { ref: "Role", localField: "roleId", foreignField: "_id", justOne: true });
 
 export const AccountModel = model<AccountDocument>(Account.name, AccountSchema);

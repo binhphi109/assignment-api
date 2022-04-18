@@ -29,3 +29,63 @@ export const AdminAccess: RequestHandler = function (req, res, next) {
     next();
   });
 };
+
+export const AccountEditAccess: RequestHandler = function (req, res, next) {
+  getAccount(req, res, function (account) {
+    if (account.username !== "admin" && !account.role?.accountEdit) {
+      throw new AuthenticationError("Authentication failed");
+    }
+
+    next();
+  });
+};
+
+export const AccountDeleteAccess: RequestHandler = function (req, res, next) {
+  getAccount(req, res, function (account) {
+    if (account.username !== "admin" && !account.role?.accountDelete) {
+      throw new AuthenticationError("Authentication failed");
+    }
+
+    next();
+  });
+};
+
+export const RoleViewAccess: RequestHandler = function (req, res, next) {
+  getAccount(req, res, function (account) {
+    if (account.username !== "admin" && !account.role?.roleView) {
+      throw new AuthenticationError("Authentication failed");
+    }
+
+    next();
+  });
+};
+
+export const RoleCreateAccess: RequestHandler = function (req, res, next) {
+  getAccount(req, res, function (account) {
+    if (account.username !== "admin" && !account.role?.roleCreate) {
+      throw new AuthenticationError("Authentication failed");
+    }
+
+    next();
+  });
+};
+
+export const RoleEditAccess: RequestHandler = function (req, res, next) {
+  getAccount(req, res, function (account) {
+    if (account.username !== "admin" && !account.role?.roleEdit) {
+      throw new AuthenticationError("Authentication failed");
+    }
+
+    next();
+  });
+};
+
+export const RoleDeleteAccess: RequestHandler = function (req, res, next) {
+  getAccount(req, res, function (account) {
+    if (account.username !== "admin" && !account.role?.roleDelete) {
+      throw new AuthenticationError("Authentication failed");
+    }
+
+    next();
+  });
+};

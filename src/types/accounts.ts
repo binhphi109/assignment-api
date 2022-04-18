@@ -5,6 +5,7 @@ export type CreateAccountType = {
   email: string;
   username: string;
   password: string;
+  roleId: string;
 };
 
 export type AccountFilter = {

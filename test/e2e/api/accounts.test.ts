@@ -198,7 +198,7 @@ describe("api/accounts", function () {
 
   test("PUT: /:accountId should update account successfully", async function () {
     // Login
-    const adminAccountToken = await login("admin", "12345");
+    const ownerAccountToken = await login("owner", "12345");
 
     // Create account
     const createdAccount = await createAccount({});
@@ -213,7 +213,7 @@ describe("api/accounts", function () {
     const request = supertest(app);
     const response = await request
       .put(`/accounts/${createdAccount._id}`)
-      .set("Authorization", adminAccountToken.token)
+      .set("Authorization", ownerAccountToken.token)
       .send(data)
       .expect(200);
 
@@ -237,9 +237,31 @@ describe("api/accounts", function () {
     await request.put(`/accounts/${createdAccount._id}`).send(data).expect(401);
   });
 
+  test("PUT: /:accountId should return 401 when login viewer role", async function () {
+    // Login
+    const viewerAccountToken = await login("viewer", "12345");
+
+    const createdAccount = await createAccount({});
+
+    var data = {
+      name: "Test Account Update",
+      email: "test@mail.com",
+      username: "testAccountUpdate",
+      password: "12345",
+    };
+
+    const request = supertest(app);
+
+    await request
+      .put(`/accounts/${createdAccount._id}`)
+      .set("Authorization", viewerAccountToken.token)
+      .send(data)
+      .expect(401);
+  });
+
   test("PUT: /:accountId should return 404 when accountId not existed", async function () {
     // Login
-    const adminAccountToken = await login("admin", "12345");
+    const ownerAccountToken = await login("owner", "12345");
 
     var data = {
       name: "Test Account Update",
@@ -252,14 +274,14 @@ describe("api/accounts", function () {
 
     await request
       .put(`/accounts/${Types.ObjectId()}`)
-      .set("Authorization", adminAccountToken.token)
+      .set("Authorization", ownerAccountToken.token)
       .send(data)
       .expect(404);
   });
 
   test("DELETE: /:accountId should delete account successfully", async function () {
     // Login
-    const adminAccountToken = await login("admin", "12345");
+    const ownerAccountToken = await login("owner", "12345");
 
     // Create account
     const createdAccount = await createAccount({});
@@ -267,7 +289,7 @@ describe("api/accounts", function () {
     const request = supertest(app);
     const response = await request
       .delete(`/accounts/${createdAccount._id}`)
-      .set("Authorization", adminAccountToken.token)
+      .set("Authorization", ownerAccountToken.token)
       .expect(200);
 
     expect(response.body).not.toBeNull();
@@ -283,15 +305,30 @@ describe("api/accounts", function () {
     await request.delete(`/accounts/${createdAccount._id}`).expect(401);
   });
 
+  test("DELETE: /:accountId should return 401 when login with viewer", async function () {
+    // Login
+    const viewerAccountToken = await login("viewer", "12345");
+
+    // Create account
+    const createdAccount = await createAccount({});
+
+    const request = supertest(app);
+
+    await request
+      .delete(`/accounts/${createdAccount._id}`)
+      .set("Authorization", viewerAccountToken.token)
+      .expect(401);
+  });
+
   test("DELETE: /:accountId should return 404 when accountId not existed", async function () {
     // Login
-    const adminAccountToken = await login("admin", "12345");
+    const ownerAccountToken = await login("owner", "12345");
 
     const request = supertest(app);
 
     await request
       .delete(`/accounts/${Types.ObjectId()}`)
-      .set("Authorization", adminAccountToken.token)
+      .set("Authorization", ownerAccountToken.token)
       .expect(404);
   });
 });

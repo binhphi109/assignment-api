@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { LoginAccess } from "../policies/auth";
+import { AccountEditAccess, AccountDeleteAccess, LoginAccess } from "../policies/auth";
 import { asyncErrorHandler } from "../core/middlewares/errorHandler";
 import { Account } from "../models/Account";
 import AccountService from "../services/AccountService";
@@ -61,7 +61,7 @@ router.get(
 
 router.put(
   "/:accountId",
-  LoginAccess,
+  AccountEditAccess,
   asyncErrorHandler(async function (req, res) {
     const accountId = req.params.accountId;
     const account = req.body;
@@ -77,7 +77,7 @@ router.put(
 
 router.delete(
   "/:accountId",
-  LoginAccess,
+  AccountDeleteAccess,
   asyncErrorHandler(async function (req, res) {
     const accountId = req.params.accountId;
 
