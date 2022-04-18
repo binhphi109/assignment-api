@@ -27,18 +27,18 @@ services:
     # logging:
     #   driver: none
     
-  # sample-api:
-  #   build: 
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   ports:
-  #     - 80:3000
-  #   networks:
-  #     - sample-network
-  #   environment: 
-  #     <<: *common-variables
-  #   restart: always
-  #   command: 
-  #     - node
-  #     - "dist/server.js"
+  sample-api:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:3000
+    networks:
+      - sample-network
+    environment: 
+      <<: *common-variables
+    restart: always
+    command: 
+      - node
+      - "dist/server.js"
   

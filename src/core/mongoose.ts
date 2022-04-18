@@ -3,15 +3,13 @@ import path from "path";
 import config from "../config";
 
 export default {
-  connect: async function (): Promise<Mongoose | null> {
+  connect: async function () {
     config.files.models.forEach((modelPath) => {
       require(path.resolve(modelPath));
     });
 
-    var db = null;
-
     try {
-      db = await mongoose.connect(config.mongodb, {
+      await mongoose.connect(config.mongodb, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
@@ -21,7 +19,8 @@ export default {
     } catch (error) {
       console.error("Unable to connect to MongoDb database:", error);
     }
-
-    return db;
+  },
+  disconnect: async function () {
+    await mongoose.disconnect();
   },
 };

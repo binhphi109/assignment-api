@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "6ee2e807-46c2-494b-aa08-ee0ad050fa2e",
+		"name": "Sample",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Admin\",\n    \"username\": \"admin\",\n    \"password\": \"qwer\",\n    \"email\": \"sample@mail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/accounts",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"qwer\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/accounts/token",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Role",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjVjMGUyMmQ2NzBjYjk2ZGM2MjJkYTkiLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6bnVsbCwiaWF0IjoxNjUwMjAyNTY4LCJleHAiOjE2NTU1NTkzNjh9.4ySdOC9gVSKXWTm9joSgFkpbDrPvu-sWD4yCG4xlR1k",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Viewer\",\n    \"accountEdit\": false,\n    \"accountDelete\": false,\n    \"roleView\": false,\n    \"roleCreate\": false,\n    \"roleEdit\": false,\n    \"roleDelete\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/roles",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"roles"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

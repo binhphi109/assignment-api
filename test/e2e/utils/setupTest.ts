@@ -18,4 +18,8 @@ export const setupTestDB = async function () {
   });
 
   beforeEach(async function () {});
+
+  afterAll(async function () {
+    await db.disconnect();
+  });
 };
