@@ -4,4 +4,6 @@ import roles from "./roles";
 
 const router = Router();
 
+router.use("/accounts", accounts);
+
 export default router;
