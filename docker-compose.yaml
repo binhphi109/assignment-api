@@ -1,0 +1,44 @@
+version: '2.4'
+
+networks:
+  sample-network:
+    driver: bridge
+
+x-common-variables: &common-variables
+  MONGO_CONNECTION: mongodb://testing:E6aQHs56&u@mongo:27017/sample
+  TOKEN_SIGN_METHOD: HS256
+  TOKEN_SIGN_KEY: secret
+  TOKEN_VERIFY_KEY: secret
+
+services:
+  mongo:
+    image: bitnami/mongodb
+    ports:
+      - 27017:27017
+    restart: always
+    networks:
+      - sample-network
+    environment:
+      MONGODB_DATABASE: sample
+      MONGODB_USERNAME: testing
+      MONGODB_PASSWORD: E6aQHs56&u
+      MONGODB_ROOT_USER: sample
+      MONGODB_ROOT_PASSWORD: Bq8FD74#%9
+    # logging:
+    #   driver: none
+    
+  sample-api:
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:3000
+    networks:
+      - sample-network
+    environment: 
+      <<: *common-variables
+    restart: always
+    command: 
+      - node
+      - "dist/server.js"
+  
